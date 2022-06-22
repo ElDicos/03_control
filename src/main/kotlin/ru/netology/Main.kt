@@ -32,15 +32,14 @@ fun isTransferAvailable(cardType: String, outgoingTransfer: Boolean, transferAmo
             "VK" -> return (transferAmount <= (vkMonthTransferLimit - thisMonthTransfersOut) &&
                     (transferAmount <= vkOneTimeTransferLimit))
         }
-    } else {
+    } else
         when (cardType) {
             "Mastercard", "Maestro", "Visa", "МИР" -> return (transferAmount <= (monthLimit - thisMonthTransfersIn) &&
                     transferAmount <= (dayLimit - thisDayTransferIn))
             "VK" -> return (transferAmount <= (vkMonthTransferLimit - thisMonthTransfersIn) &&
                     (transferAmount <= vkOneTimeTransferLimit))
         }
-    }
-    return true
+    return false
 }
 
 fun commissionAmount(cardType: String = "VK", transferAmount: Int = 0): Int {
@@ -64,7 +63,7 @@ fun commissionAmount(cardType: String = "VK", transferAmount: Int = 0): Int {
     }
 }
 
-fun calcCommission(cardType: String, transferAmount: Int, commissionPercentage: Int): Int {
+fun calcCommission(cardType: String, transferAmount: Int, commissionPercentage: Int = 0): Int {
     val percentage = 100_00
     return when (cardType) {
         "Mastercard", "Maestro" -> (transferAmount - maestroFreeTransferAmount) * commissionPercentage / percentage
@@ -73,7 +72,7 @@ fun calcCommission(cardType: String, transferAmount: Int, commissionPercentage: 
     }
 }
 
-fun addToTotal(transferAmount: Int, outgoingTransfer: Boolean) {
+fun addToTotal(transferAmount: Int, outgoingTransfer: Boolean = true) {
    if (outgoingTransfer) {
        thisMonthTransfersOut += transferAmount
        thisDayTransferOut += transferAmount
